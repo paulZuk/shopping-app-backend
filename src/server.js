@@ -1,29 +1,38 @@
 import { createServer } from 'http';
+import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import passport from 'passport';
 import session from 'express-session';
 import express from 'express';
-import { urlencoded } from 'body-parser';
+import flash from 'connect-flash';
+import bodyParser from 'body-parser';
 import MongoClient from './mongodb/client';
+import cors from './controllers/CorsController';
 import login from './routes/login';
+import register from './routes/register';
 import index from './routes';
 
 const app = express();
 
 const mongodb = new MongoClient();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 8080;
+
+app.use(bodyParser.json());
+app.use(cors);
 
 app.use(express.static('public'));
-app.use(morgan('combined'));
-app.use(urlencoded({ extended: true }));
+app.use(morgan('dev'));
+app.use(cookieParser());
 app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 // Routes
 app.use('/', index);
 app.use('/login', login);
+app.use('/register', register)
 
 const server = createServer(app);
 
