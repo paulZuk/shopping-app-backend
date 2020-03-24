@@ -9,7 +9,7 @@ import bodyParser from 'body-parser';
 import MongoClient from './mongodb/client';
 import cors from './controllers/CorsController';
 import login from './routes/login';
-import register from './routes/register';
+import user from './routes/user';
 import index from './routes';
 
 const app = express();
@@ -32,7 +32,7 @@ app.use(flash());
 // Routes
 app.use('/', index);
 app.use('/login', login);
-app.use('/register', register)
+app.use('/user', user)
 
 const server = createServer(app);
 
