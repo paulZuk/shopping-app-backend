@@ -12,23 +12,20 @@ class MondoClientSetup {
 
         this.dbName = dbName;
         this.path = path;
-        this.dataBase = null;
+        this.db = null;
     }
 
-    async init() {
+    async init(callback) {
         const client = new MongoClient('mongodb://localhost:27017');
-
         try {
             await client.connect();
             console.log('connected');
+            this.db = client.db(this.dbName);
+            callback();
 
-            const db = client.db(this.dbName);
-            return db;
         } catch (err) {
             console.log(err.stack);
         }
-
-        client.close();  
     }
     async add(collectionName, data) {
         try {
