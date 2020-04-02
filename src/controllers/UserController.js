@@ -6,7 +6,7 @@ export const registerUser = (req, res, next) => {
 
     if(!errors.isEmpty()) {
         return res.status(422)
-            .json({ errors: errors.array() });
+            .json({ errors: errors.array({ onlyFirstError: true })});
     }
 
     const { name, password, email } = req.body;
