@@ -21,7 +21,11 @@ app.use(cors);
 app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(cookieParser());
-app.use(session({ secret: 'keyboard cat', resave: false, saveUninitialized: false }));
+app.use(session({
+    secret: 'keyboard cat',
+    resave: false,
+    saveUninitialized: false
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -33,15 +37,15 @@ app.use('/user', user);
 
 (async () => {
     try {
-        await mongoose.connect('mongodb://localhost:27017', { 
-            useUnifiedTopology: true, 
-            useNewUrlParser: true 
+        await mongoose.connect('mongodb://localhost:27017/ShoppingApp', {
+            useUnifiedTopology: true,
+            useNewUrlParser: true
         });
         console.log('Database connected');
         app.listen(port, () => {
             console.log(`Listening for events on ${port}`);
         });
-    } catch(err) {
+    } catch (err) {
         console.log(err);
     }
 })();

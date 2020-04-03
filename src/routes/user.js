@@ -11,15 +11,16 @@ router.post('/', [
     body('email')
         .isEmail()
         .custom((value) => {
-            return User.findOne({email: value}).then(user => {
-                if(user) {
-                    return Promise.reject(
-                        'User already exist, please select different email and try again'
-                    );
-                }
-            })
-    }),
+            return User.findOne({ email: value })
+                .then(user => {
+                    if (user) {
+                        return Promise.reject(
+                            'User already exist, please select different email and try again'
+                        );
+                    }
+                })
+        }),
 ],
-registerUser);
+    registerUser);
 
 export default router;
