@@ -1,6 +1,9 @@
 import { validationResult } from 'express-validator';
+import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import User from '../models/user';
+
+const secret = process.env.SECRET;
 
 export const registerUser = (req, res, next) => {
     const errors = validationResult(req);
@@ -33,8 +36,51 @@ export const registerUser = (req, res, next) => {
             });
         })
         .catch(err => {
-            console.log(err);
+            if(!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
         });
+}
+
+export const loginUser = (req, res, next) => {
+    const { login, password } = req.body;
+    let loggedUser;
+
+    User.findOne({ login })
+        .then(user => {
+            if(!user) {
+                const error = new Error('User with this login not exist in database.');
+                error.statusCode = 500;
+                throw error;
+            }
+
+            loggedUser = user;
+
+            return bcrypt.compare(password, user.password);
+        })
+        .then(isVerify => {
+            if(!isVerify) {
+                const error = new Error('Password is incorrect!');
+                error.statusCode = 401;
+                throw error;
+            }
+
+            const token = jwt.sign({ 
+                id: loggedUser._id, 
+                email: loggedUser.email,
+                login: loggedUser.login,
+            }, secret)
+
+            res.status(200).json({ token });
+        })
+        .catch(err => {
+            if(!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        });
+
 }
 
 export default registerUser;

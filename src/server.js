@@ -46,6 +46,6 @@ app.use('/user', user);
             console.log(`Listening for events on ${port}`);
         });
     } catch (err) {
-        console.log(err);
+        throw err;
     }
 })();
