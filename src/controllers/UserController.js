@@ -72,7 +72,13 @@ export const loginUser = (req, res, next) => {
                 login: loggedUser.login,
             }, secret)
 
-            res.status(200).json({ token });
+            res.cookie('token', token, {
+                expires: new Date(Date.now() + 90000),
+                httpOnly: true,
+                secure: false,
+            });
+
+            res.status(200).json({ msg: 'Logged successful'});
         })
         .catch(err => {
             if(!err.statusCode) {

@@ -1,8 +1,6 @@
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
-import passport from 'passport';
-import session from 'express-session';
 import express from 'express';
 import flash from 'connect-flash';
 import bodyParser from 'body-parser';
@@ -17,17 +15,9 @@ const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 app.use(cors);
-
 app.use(express.static('public'));
 app.use(morgan('dev'));
 app.use(cookieParser());
-app.use(session({
-    secret: 'keyboard cat',
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 app.use(flash());
 
 // Routes
