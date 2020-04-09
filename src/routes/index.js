@@ -1,9 +1,9 @@
-import { Router } from 'express';
+import { Router } from "express";
 
 const router = Router();
 
-router.get('/', function(req, res) {
-    res.redirect('/login');
+router.get("/", function (req, res) {
+  res.redirect("/login");
 });
 
 export default router;
