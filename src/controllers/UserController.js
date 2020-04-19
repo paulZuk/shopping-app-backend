@@ -75,10 +75,9 @@ export const loginUser = (req, res, next) => {
         secret
       );
 
-      res.cookie("token", token, {
-        expires: new Date(Date.now() + 90000),
-        httpOnly: true,
-        secure: false,
+      res.cookie('token', token, {
+          maxAge: 60 * 60 * 1000,
+          httpOnly: true,
       });
 
       res.status(200).json({ msg: "Logged successful" });
@@ -89,6 +88,24 @@ export const loginUser = (req, res, next) => {
       }
       next(err);
     });
+};
+
+export const verifyToken = async (req, res, next) => {
+    const token = req.cookies.token || '';
+    try {
+      if (!token) {
+        return res.status(401).json('You need to Login')
+      }
+      const decrypt = await jwt.verify(token, process.env.SECRET);
+      req.user = {
+        id: decrypt.id,
+        email: decrypt.email,
+        login: decrypt.login,
+      };
+      next();
+    } catch (err) {
+      return res.status(500).json(err.toString());
+    }
 };
 
 export default registerUser;
