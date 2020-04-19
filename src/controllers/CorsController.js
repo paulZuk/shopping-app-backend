@@ -5,6 +5,6 @@ const cors = (req, res, next) => {
   res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
 
   next();
-}
+};
 
 export default cors;

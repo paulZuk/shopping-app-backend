@@ -16,8 +16,8 @@ const port = process.env.PORT || 8080;
 
 app.use(bodyParser.json());
 app.use(cors);
-app.use(express.static('public'));
-app.use(morgan('dev'));
+app.use(express.static("public"));
+app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(flash());
 
@@ -28,16 +28,16 @@ app.use('/user', user);
 app.use('/list', list);
 
 (async () => {
-    try {
-        await mongoose.connect('mongodb://localhost:27017/ShoppingApp', {
-            useUnifiedTopology: true,
-            useNewUrlParser: true
-        });
-        console.log('Database connected');
-        app.listen(port, () => {
-            console.log(`Listening for events on ${port}`);
-        });
-    } catch (err) {
-        throw err;
-    }
+  try {
+    await mongoose.connect("mongodb://localhost:27017/ShoppingApp", {
+      useUnifiedTopology: true,
+      useNewUrlParser: true,
+    });
+    console.log("Database connected");
+    app.listen(port, () => {
+      console.log(`Listening for events on ${port}`);
+    });
+  } catch (err) {
+    throw err;
+  }
 })();
