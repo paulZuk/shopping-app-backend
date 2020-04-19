@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import cors from './controllers/CorsController';
 import login from './routes/login';
 import user from './routes/user';
+import list from './routes/list';
 import index from './routes';
 
 const app = express();
@@ -24,6 +25,7 @@ app.use(flash());
 app.use('/', index);
 app.use('/login', login);
 app.use('/user', user);
+app.use('/list', list);
 
 (async () => {
     try {
