@@ -29,7 +29,7 @@ app.use('/list', list);
 
 (async () => {
   try {
-    await mongoose.connect("mongodb://localhost:27017/ShoppingApp", {
+    await mongoose.connect("mongodb://mongo:27017/ShoppingApp", {
       useUnifiedTopology: true,
       useNewUrlParser: true,
     });

@@ -1,11 +1,11 @@
 import { Router } from "express";
 import User from "../models/user";
-import { registerUser } from "../controllers/UserController";
+import { registerUser, getUsers, verifyToken } from "../controllers/UserController";
 import { body } from "express-validator/check";
 
-const router = Router();
+const usersRouter = Router();
 
-router.post(
+usersRouter.post(
   "/",
   [
     body("name")
@@ -34,4 +34,6 @@ router.post(
   registerUser
 );
 
-export default router;
+usersRouter.get('/', verifyToken, getUsers);
+
+export default usersRouter;
