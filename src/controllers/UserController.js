@@ -105,4 +105,23 @@ export const verifyToken = async (req, res, next) => {
   }
 };
 
+export const getUsers = async (req, res, next) => {
+  const withoutMe = req.query.withoutMe;
+  const loggedUserId = req.user.id;
+
+  try {
+    const dbUsers = await User.find();
+    const users = dbUsers
+        .filter((user => withoutMe ? user.id !== loggedUserId : true))
+        .map(user => ({ id: user._id, name: user.login }));
+
+    res.status(200).json({
+      users,
+    })
+
+  } catch(err) {
+    return res.status(500).json(err.toString());
+  }
+}
+
 export default registerUser;

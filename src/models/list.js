@@ -1,10 +1,13 @@
 import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 
-const userSchema = new Schema({
+const listSchema = new Schema({
+    userId: String,
     listName: String,
     priority: String,
-    shared: String,
+    shared: [String],
+    items:[]
 });
 
-export default mongoose.model('User', userSchema);
+export default mongoose.model('List', listSchema);
