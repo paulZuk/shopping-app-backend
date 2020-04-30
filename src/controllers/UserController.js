@@ -112,16 +112,15 @@ export const getUsers = async (req, res, next) => {
   try {
     const dbUsers = await User.find();
     const users = dbUsers
-        .filter((user => withoutMe ? user.id !== loggedUserId : true))
-        .map(user => ({ id: user._id, name: user.login }));
+      .filter((user) => (withoutMe ? user.id !== loggedUserId : true))
+      .map((user) => ({ id: user._id, name: user.login }));
 
     res.status(200).json({
       users,
-    })
-
-  } catch(err) {
+    });
+  } catch (err) {
     return res.status(500).json(err.toString());
   }
-}
+};
 
 export default registerUser;
