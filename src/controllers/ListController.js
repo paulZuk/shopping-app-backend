@@ -29,3 +29,19 @@ export const addList = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getList = async (req, res, next) => {
+  const user = req.user;
+
+  try {
+    const list = await List.find({ userId: user.id });
+    res.status(200).json({
+      shoppingList: list,
+    });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
