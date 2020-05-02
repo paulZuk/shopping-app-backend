@@ -9,18 +9,22 @@ export const addList = async (req, res, next) => {
     const sharedIds = shared.map((user) => user.id);
     const sharedUsers = await User.find({ _id: { $in: sharedIds } });
 
+    const mapedSharedUsers = sharedUsers.map((user) => ({
+      login: user.login,
+    }));
+
     const list = new List({
       userId: user.id,
       listName,
       priority,
-      shared: sharedUsers,
+      shared: mapedSharedUsers,
     });
 
     const savedList = await list.save();
 
     res.status(200).json({
       created: "List created",
-      id: savedList._id,
+      savedList,
     });
   } catch (err) {
     if (!err.statusCode) {
@@ -35,6 +39,7 @@ export const getList = async (req, res, next) => {
 
   try {
     const list = await List.find({ userId: user.id });
+
     res.status(200).json({
       shoppingList: list,
     });
