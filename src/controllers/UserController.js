@@ -34,10 +34,8 @@ export const registerUser = async (req, res, next) => {
 			id: savedUser._id,
 		});
 	} catch (err) {
-		if (!err.statusCode) {
-			err.statusCode = 500;
-		}
-		next(err);
+		errors.array().push({ msg: `Server error: ${err.toString()}` });
+		return res.status(500).json({ errors });
 	}
 };
 
@@ -69,17 +67,20 @@ export const loginUser = async (req, res, next) => {
 
 		res.status(200).json({ msg: 'Logged successful' });
 	} catch (err) {
-		return res.status(500).json(err.toString());
+		errors.array().push({ msg: `Server error: ${err.toString()}` });
+		return res.status(500).json({ errors });
 	}
 };
 
 export const verifyToken = async (req, res, next) => {
 	const token = req.cookies.token || '';
+	const errors = [];
+
 	try {
 		if (!token) {
-			return res
-				.status(401)
-				.json({ errors: [{ msg: 'You need to Login' }] });
+			errors.push({ msg: 'You need to Login' });
+
+			return res.status(401).json({ errors });
 		}
 		const decrypt = await jwt.verify(token, process.env.SECRET);
 		req.user = {
@@ -89,13 +90,15 @@ export const verifyToken = async (req, res, next) => {
 		};
 		next();
 	} catch (err) {
-		return res.status(500).json(err.toString());
+		errors.push({ msg: `Server error: ${err.toString()}` });
+		return res.status(500).json({ errors });
 	}
 };
 
 export const getUsers = async (req, res, next) => {
 	const withoutMe = req.query.withoutMe;
 	const loggedUserId = req.user.id;
+	const errors = [];
 
 	try {
 		const dbUsers = await User.find();
@@ -107,7 +110,8 @@ export const getUsers = async (req, res, next) => {
 			users,
 		});
 	} catch (err) {
-		return res.status(500).json(err.toString());
+		errors.push({ msg: `Server error: ${err.toString()}` });
+		return res.status(500).json({ errors });
 	}
 };
 
