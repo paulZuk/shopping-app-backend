@@ -1,23 +1,16 @@
 import List from '../models/list';
-import User from '../models/user';
+import { ObjectID } from 'mongodb';
 
 export const addList = async (req, res, next) => {
 	try {
 		const user = req.user;
 		const { listName, priority, shared } = req.body;
 
-		const sharedIds = shared.map((user) => user.id);
-		const sharedUsers = await User.find({ _id: { $in: sharedIds } });
-
-		const mapedSharedUsers = sharedUsers.map((user) => ({
-			login: user.login,
-		}));
-
 		const list = new List({
 			userId: user.id,
 			listName,
 			priority,
-			shared: mapedSharedUsers,
+			shared,
 		});
 
 		const savedList = await list.save();
@@ -59,10 +52,36 @@ export const getList = async (req, res, next) => {
 	}
 
 	try {
-		const list = await List.find({ userId: user.id });
+		const list = await List.find({
+			$or: [
+				{ shared: { $elemMatch: { _id: ObjectID(user.id) } } },
+				{ userId: user.id },
+			],
+		});
 
 		res.status(200).json({
 			shoppingList: list,
+		});
+	} catch (err) {
+		if (!err.statusCode) {
+			err.statusCode = 500;
+		}
+		next(err);
+	}
+};
+
+export const editList = async (req, res, next) => {
+	const { id, listName, priority, shared } = req.body;
+
+	try {
+		await List.findByIdAndUpdate(id, {
+			listName,
+			priority,
+			shared,
+		});
+
+		res.status(200).json({
+			msg: `List with id: ${id} edited`,
 		});
 	} catch (err) {
 		if (!err.statusCode) {

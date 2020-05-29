@@ -1,14 +1,14 @@
-import mongoose from "mongoose";
-import { UserSchema } from "./user";
+import mongoose from 'mongoose';
+import { UserSchema } from './user';
 
 const Schema = mongoose.Schema;
 
 const listSchema = new Schema({
-  userId: String,
-  listName: String,
-  priority: String,
-  shared: [UserSchema],
-  items: [],
+	userId: String,
+	listName: String,
+	priority: String,
+	shared: [],
+	items: [],
 });
 
-export default mongoose.model("List", listSchema);
+export default mongoose.model('List', listSchema);
