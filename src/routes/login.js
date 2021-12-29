@@ -1,17 +1,17 @@
-import { Router } from 'express';
-import { loginUser } from '../controllers/UserController';
-import { body } from 'express-validator/check';
-import bcrypt from 'bcrypt';
-import User from '../models/user';
+import { Router } from "express";
+import { loginUser } from "../controllers/UserController";
+import { body } from "express-validator/check";
+import bcrypt from "bcrypt";
+import User from "../models/user";
 
 const router = Router();
 
 router.post(
-	'/',
+	"/",
 	[
-		body('login')
+		body("login")
 			.notEmpty()
-			.withMessage('Login cannot be empty.')
+			.withMessage("Login cannot be empty.")
 			.custom(async (value, { req }) => {
 				try {
 					const loggedUser = await User.findOne({ login: value });
@@ -26,9 +26,9 @@ router.post(
 					throw err;
 				}
 			}),
-		body('password')
+		body("password")
 			.notEmpty()
-			.withMessage('Password cannot be empty.')
+			.withMessage("Password cannot be empty.")
 			.custom(async (value, { req }) => {
 				try {
 					if (!req.loggedUser) {

@@ -3,7 +3,7 @@ import { MongoClient } from "mongodb";
 const defaultConfig = {
   dbName: "MyDb",
 };
-class MondoClientSetup {
+class MongoClientSetup {
   constructor(config) {
     const { dbName, path } = Object.assign({}, defaultConfig, config);
 
@@ -44,13 +44,12 @@ class MondoClientSetup {
     try {
       const db = await this.init();
 
-      const found = await db.collection(collectionName).find(query).toArray();
+      return await db.collection(collectionName).find(query).toArray();
 
-      return found;
     } catch (err) {
       console.log(err.stack);
     }
   }
 }
 
-export default MondoClientSetup;
+export default MongoClientSetup;
